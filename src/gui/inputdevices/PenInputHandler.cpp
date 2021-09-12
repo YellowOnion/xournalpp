@@ -174,8 +174,10 @@ double PenInputHandler::filterPressure(PositionInputData const& pos, XojPageView
     Settings* settings = this->inputContext->getSettings();
 
     if (filteredPressure != Point::NO_PRESSURE) {
-        filteredPressure *= settings->getPressureMultiplier();
-        filteredPressure = std::max(settings->getMinimumPressure(), filteredPressure);
+        double a = settings->getMinimumPressure();
+        double b = settings->getPressureMultiplier();
+        filteredPressure = a + (filterPressure * (1-a)/b);
+        filteredPressure = std::min(1.0, filteredPressure);
     }
 
     return filteredPressure;
